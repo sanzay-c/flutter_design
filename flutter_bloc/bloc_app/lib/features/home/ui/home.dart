@@ -43,15 +43,32 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else if (state is HomeProductItemWishlistedActionState) {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Item Wishlisted'),
+              backgroundColor: Color.fromRGBO(12, 11, 11, 1),
+              content: Text(
+                'Item added to wishlist',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
             ),
           );
         } else if (state is HomeProductItemCartedActionState){
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Item Added to cart'),
+              duration: Duration(seconds: 3),
+              backgroundColor: Color.fromRGBO(12, 11, 11, 1),
+              content: Text(
+                'Item added to cart',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
             ),
           );
         }
@@ -75,7 +92,6 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                   ),
                 ),
-                // centerTitle: true,
                 actions: [
                   IconButton(
                     onPressed: () {
@@ -91,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                       homeBloc.add(HomeCartButtonNavigateEvent());
                     },
                     icon: const Icon(
-                      Icons.shopping_bag_outlined,
+                      Icons.shopping_cart_outlined,
                       color: Colors.white,
                     ),
                   )

@@ -77,7 +77,7 @@ class ProductTileWidget extends StatelessWidget {
                       );
                     },
                     icon: const Icon(
-                      Icons.shopping_bag_outlined,
+                      Icons.shopping_cart_outlined,
                     ),
                   ),
                 ],

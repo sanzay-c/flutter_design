@@ -26,7 +26,7 @@ class _WishlistPageState extends State<WishlistPage> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.teal,
         title: const Text(
-          "Wishlist",
+          "Wishlist Items",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -39,9 +39,18 @@ class _WishlistPageState extends State<WishlistPage> {
         buildWhen: (previous, current) => current is! WishlistActionState,
         listener: (context, state) {
           if (state is WishlistRemoveActionState){
-             ScaffoldMessenger.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Item removed form wishlist"),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(12, 11, 11, 1),
+                content: Text(
+                  'Item removed from wishlist',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             );
           }

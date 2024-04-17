@@ -66,16 +66,6 @@ class WishlistTileWidget extends StatelessWidget {
                       Icons.favorite,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      //  cartBloc.add(CartRemoveFromCartEvent(
-                      //   productDataModel: productDataModel
-                      //  ));
-                    },
-                    icon: const Icon(
-                      Icons.shopping_bag_outlined,
-                    ),
-                  ),
                 ],
               ),
             ],
@@ -85,3 +75,4 @@ class WishlistTileWidget extends StatelessWidget {
     );
   }
 }
+  

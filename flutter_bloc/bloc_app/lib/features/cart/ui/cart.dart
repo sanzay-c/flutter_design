@@ -39,9 +39,18 @@ class _CartPageState extends State<CartPage> {
         buildWhen: (previous, current) => current is! CartActionState,
         listener: (context, state) {    
           if (state is CartRemoveActionState) {
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Item removed form cart"),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(12, 11, 11, 1),
+                content: Text(
+                  'Item removed from cart',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             );
           }
