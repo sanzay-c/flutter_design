@@ -41,15 +41,21 @@ class _CartPageState extends State<CartPage> {
           if (state is CartRemoveActionState) {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                duration: Duration(seconds: 3),
-                backgroundColor: Color.fromRGBO(12, 11, 11, 1),
-                content: Text(
+              SnackBar(
+                duration: const Duration(seconds: 3),
+                backgroundColor: const Color.fromRGBO(12, 11, 11, 1),
+                content: const Text(
                   'Item removed from cart',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                   ),
+                ),
+                action: SnackBarAction(
+                  label: 'undo',
+                  onPressed: () {
+                    cartBloc.undo();
+                  },
                 ),
               ),
             );
