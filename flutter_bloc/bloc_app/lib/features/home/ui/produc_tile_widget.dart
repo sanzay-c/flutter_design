@@ -2,7 +2,7 @@ import 'package:bloc_app/features/home/bloc/home_bloc.dart';
 import 'package:bloc_app/features/home/models/my_home_product_data_model.dart';
 import 'package:flutter/material.dart';
 
-class ProductTileWidget extends StatelessWidget {
+class ProductTileWidget extends StatefulWidget {
   const ProductTileWidget({
     super.key,
     required this.productDataModel,
@@ -11,6 +11,13 @@ class ProductTileWidget extends StatelessWidget {
 
   final ProductDataModel productDataModel;
   final HomeBloc homeBloc;
+
+  @override
+  State<ProductTileWidget> createState() => _ProductTileWidgetState();
+}
+
+class _ProductTileWidgetState extends State<ProductTileWidget> {
+  bool isButtonClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,25 +37,25 @@ class ProductTileWidget extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(productDataModel.imageUrl),
+                image: NetworkImage(widget.productDataModel.imageUrl),
               ),
             ),
           ),
           const SizedBox(height: 10),
           Text(
-            productDataModel.name,
+            widget.productDataModel.name,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(productDataModel.description),
+          Text(widget.productDataModel.description),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '\$ ${productDataModel.price.toString()}',
+                '\$ ${widget.productDataModel.price.toString()}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -58,21 +65,28 @@ class ProductTileWidget extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      homeBloc.add(
+                      setState(() {
+                        isButtonClicked = true;
+                      });
+                      widget.homeBloc.add(
                         HomeProductWishListButtonClickedEvent(
-                          clickedProduct: productDataModel,
+                          clickedProduct: widget.productDataModel,
                         ),
                       );
                     },
-                    icon: const Icon(
-                      Icons.favorite_border_outlined,
+                    icon: AnimatedOpacity(
+                      opacity: isButtonClicked ? 0.0 : 1.0,
+                      duration: const Duration(milliseconds: 700),
+                      child: const Icon(
+                        Icons.favorite_border_outlined,
+                      ),
                     ),
                   ),
                   IconButton(
                     onPressed: () {
-                      homeBloc.add(
+                      widget.homeBloc.add(
                         HomeProductCartButtonClickedEvent(
-                          clickedProduct: productDataModel,
+                          clickedProduct: widget.productDataModel,
                         ),
                       );
                     },
@@ -89,3 +103,71 @@ class ProductTileWidget extends StatelessWidget {
     );
   }
 }
+
+
+
+
+// for controller (this is for animation)
+/**
+ *  late AnimationController _controller;
+  late Animation<double> _animation;
+  bool _isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 0, end: 2 * 3.14159).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+  }
+
+ */
+
+
+// for onPressed:
+/**
+ * IconButton(
+    onPressed: () {
+     _toggleFavorite();
+      _controller.reset();
+      _controller.forward();
+      widget.homeBloc.add(
+        HomeProductWishListButtonClickedEvent(
+          clickedProduct: widget.productDataModel,
+        ),
+      );
+    },
+     icon: AnimatedSwitcher(
+      duration: Duration(milliseconds: 300),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return RotationTransition(
+          turns: animation,
+          child: child,
+        );
+      },
+      child: _isFavorite
+          ? const Icon(
+              Icons.favorite,
+              key: ValueKey("favorite"),
+              color: Colors.red,
+            )
+          : const Icon(
+              Icons.favorite_border_outlined,
+              key: ValueKey("notFavorite"),
+            ),
+    ),
+*/
