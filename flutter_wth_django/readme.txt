@@ -20,4 +20,8 @@
     which fields to include or exclude,
     and other settings related to the serializer's behavior.
 
+
+# --- if you encounter this error "TypeError: argument of type 'WindowsPath' is not iterable"
+#       write this code in settings.py : 'NAME': str(os.path.join(BASE_DIR,'db.sqlite3')), ---
+
 ***/
