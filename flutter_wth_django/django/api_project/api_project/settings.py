@@ -123,7 +123,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# static 
+import os
+
+# Static files settings (for CSS, JS, images that are part of your site design)
+STATIC_URL = '/static/'
+
+# This is the folder where static files will be collected during 'collectstatic' (for production)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Additional directories where static files are stored during development
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'public/static'),  # Custom static files like custom JS, CSS, etc.
+]
+
+# Media files settings (for user-uploaded content, like profile pictures)
+MEDIA_URL = '/media/'
+
+# This is the folder where user-uploaded media files will be stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # This should be separate from 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -28,8 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //   super.initState();
   // }
 
-
-   // Function to refresh the data
+  // Function to refresh the data
   Future<void> _onRefresh(BuildContext context) async {
     // Triggering a refresh by reloading the data
     await fetchData();
@@ -80,9 +79,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   final drfItems = drfModel[index];
                   return Card(
                     child: ListTile(
-                      leading: Text(
-                        drfItems.id.toString(),
-                        style: const TextStyle(fontSize: 20),
+                      leading: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Image.network(
+                          drfItems.profilePic,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       title: Text(
                         drfItems.name,
@@ -94,12 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       subtitle: Text(
                         drfItems.description,
                         style: const TextStyle(fontSize: 15),
-                      ),
-                      trailing: Text(
-                        drfItems.status,
-                        style: const TextStyle(
-                          fontSize: 13,
-                        ),
                       ),
                     ),
                   );
