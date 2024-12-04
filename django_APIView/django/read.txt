@@ -1,0 +1,14 @@
+# Api is used to GET and POST the data
+    --- from rest_framework.views import APIView 
+    with the help of APIView
+
+    ** APIView: You manually define the logic for handling different
+        HTTP methods (GET, POST, PUT, DELETE, etc.) 
+        by writing individual methods for each one 
+        (e.g., get(), post(), etc.).
+
+    ** ViewSet: A ViewSet is much more automatic. 
+        You don’t have to define methods for each HTTP verb yourself. 
+        Instead, DRF provides a set of default actions like list(), 
+        create(), retrieve(), update(), and destroy() to handle the 
+        standard CRUD operations, making your code more concise.
