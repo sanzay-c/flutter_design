@@ -29,13 +29,13 @@ class _UserCommentsState extends State<UserComments> {
       width: double.infinity,
       child: Column(
         children: [
-          Text(
-            'COMMENTS',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+            Text(
+              'COMMENTS',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
-          ),
           SizedBox(height: 20),
           FutureBuilder(
             future: blogCommentsData,

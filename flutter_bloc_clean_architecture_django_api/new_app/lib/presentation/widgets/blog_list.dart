@@ -1,48 +1,61 @@
-import 'package:api_view_project/models/blog_post_model.dart';
-import 'package:api_view_project/screens/add_blog_page.dart';
-import 'package:api_view_project/screens/user_comments.dart';
-import 'package:api_view_project/services/api_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:new_app/data/datasources/blog_remote_data_sources.dart';
+import 'package:new_app/data/repositories/blog_repository_impl.dart';
+import 'package:new_app/domian/usecases/post_blog.dart';
+import 'package:new_app/presentation/blocs/blog/blog_bloc.dart';
+import 'package:new_app/presentation/blocs/blog_comments/blog_comment_bloc.dart';
+import 'package:new_app/presentation/blocs/blog_post/blog_post_bloc.dart';
+import 'package:new_app/presentation/screens/add_blog_screen.dart';
+import 'package:new_app/presentation/widgets/user_comments.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class BlogList extends StatefulWidget {
+  const BlogList({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<BlogList> createState() => _BlogListState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final ApiServices apiServices = ApiServices();
-  late Future<List<BlogPostModel>> blogPostData = apiServices.fetchBlogPost();
-
+class _BlogListState extends State<BlogList> {
   void _showComments(int postId) {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => UserComments(postId: postId,)
+      builder: (ctx) => BlocProvider.value(
+        value: context.read<BlogCommentBloc>(),
+        child: UserComments(
+          id: postId,
+        ),
+      ),
     );
+  }
+
+  // Add the refresh logic
+  Future<void> _refresh() async {
+    context.read<BlogBloc>().add(FetchBlogEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Blog Post & Comment'),
-        centerTitle: true,
-      ),
-      body: FutureBuilder(
-        future: blogPostData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<BlogBloc, BlogState>(
+        builder: (context, state) {
+          if (state is BlogInitial) {
+            context.read<BlogBloc>().add(FetchBlogEvent());
+          } else if (state is BlogLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else if (snapshot.hasData) {
-            final List<BlogPostModel> blogData = snapshot.data!;
-            return ListView.builder(
-              itemCount: blogData.length,
-              itemBuilder: (context, index) {
-                BlogPostModel blogPost = blogData[index];
+          } else if (state is BlogError) {
+            return Center(child: Text(state.errorMessage));
+          } else if (state is BlogLoaded) {
+            final blogs = state.blogs;
+
+            return RefreshIndicator( //The RefreshIndicator in Flutter is a widget that provides a "pull to refresh" 
+              onRefresh: _refresh,
+              child: ListView.builder(
+                itemCount: blogs.length,
+                itemBuilder: (context, index) {
+                  final blog = blogs[index];
+              
                   return Padding(
                     padding: EdgeInsets.all(6),
                     child: Card(
@@ -56,27 +69,26 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              blogPost.title,
+                              blog.title,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text(blogPost.content,
-                                style: TextStyle(fontSize: 14)),
+                            Text(blog.content, style: TextStyle(fontSize: 14)),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Created at: ${DateFormat('yyyy-MM-dd HH:mm').format(blogPost.createdAt)}",
+                                  "Created at: ${DateFormat('yyyy-MM-dd HH:mm').format(blog.createdAt.toLocal())}",
                                 ),
                                 ElevatedButton(
                                   onPressed:
-                                  //  _showComments,
-                                  (){
-                                    _showComments(blogPost.id);
+                                      //  _showComments,
+                                      () {
+                                    _showComments(blog.id);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     // backgroundColor: Colors
@@ -87,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     padding: EdgeInsets.symmetric(
                                         vertical: 10,
-                                        horizontal: 20), // Button padding
+                                        horizontal: 12), // Button padding
                                     elevation:
                                         0, // No shadow to maintain transparency
                                     side: BorderSide(
@@ -97,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Text(
                                     'View Comments',
                                     style: TextStyle(
-                                        fontSize: 13, // Text size
+                                        fontSize: 14, // Text size
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black // Text weight
                                         ),
@@ -110,11 +122,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   );
-              },
+                },
+              ),
             );
-          } else {
-            return SizedBox();
           }
+          return Container();
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -122,7 +134,16 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddBlogPage(),
+              builder: (context) => BlocProvider(
+                create: (context) => BlogPostBloc(
+                  postBlog: PostBlog(
+                    postRepository: BlogRepositoryImpl(
+                      dataSources: BlogRemoteDataSources(),
+                    ),
+                  ),
+                ),
+                child: AddBlogScreen(),
+              ),
             ),
           );
         },

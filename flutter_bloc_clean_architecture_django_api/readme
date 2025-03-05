@@ -1,0 +1,23 @@
+* flutter clean architecture 
+flutter clean architecture consists of three layers:
+1. Data layers
+2. Domain layers
+2. Presentation layers
+
+* Data Layer consists of three folders:
+1. Models => Define data models that map to the structure of your data (often mapping to JSON or database entities).
+2. DataSources =>  Implement the data-fetching logic. This could involve making HTTP requests or interacting with a local database 
+3. Repositories => This repository implements the domian layer repository and constructor of datasources is made here.
+
+* Domain Layer consists of three folders:
+1. Entities => Define the core business objects that your app will deal with (e.g., User, Post).
+2. Repositories (it is "abstract class")
+3. UseCases => The constructor of the domain layer repository is made here. and this use case is used in state management for building the UI. perform business logic.
+This usecase is more like a Encapsulation.
+
+* Presentation Layer consists of three folders:
+1. Bloc(--any state management--) => usecases from domain layer is used here.
+2. Screens
+3. Widgets
+
+* We begin coding from Domain Layer, creating entities, making repository of the domain layer, this repository actually is an abstract class, creating usecases, this usecase have the construtor of the repository of the domian layer. In Data Layer, we crete models, creating datasources this is actually where we use the http get post request, it is just like the services class from the MVC architecture, creating the repository, this repository actually implements the repository of the domain layer repository, and creating the constructor of the datasources. Next we create a presentation layer begin with the state management Bloc creating event, state, bloc, in bloc we use the usescase from the domain layer for building the UI and so on. Create the Screens. Create the Widgets and run the app.
