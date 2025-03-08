@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import BlogPost, Comment
 from .serializers import BlogPostSerializer, CommentSerializer
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class BlogPostApiView(APIView):
@@ -21,6 +22,17 @@ class BlogPostApiView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errror, status=status.HTTP_400_BAD_REQUEST)
+    
+     # DELETE request to delete a specific blog post
+    def delete(self, request, blog_post_id):
+        # Fetch the blog post or return a 404 error if it doesn't exist
+        blog_post = get_object_or_404(BlogPost, id=blog_post_id)
+        
+        # Delete the blog post
+        blog_post.delete()
+        
+        # Return a success response
+        return Response({"message": "Blog post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentAPIView(APIView):
@@ -52,6 +64,20 @@ class CommentAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # DELETE request to delete a specific comment
+    def delete(self, request, blog_post_id, comment_id):
+        try:
+            # Fetch the comment or return a 404 error if it doesn't exist
+            comment = Comment.objects.get(id=comment_id, blog_post_id=blog_post_id)
+        except Comment.DoesNotExist:
+            return Response({"Error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Delete the comment
+        comment.delete()
+        
+        # Return a success response
+        return Response({"message": "Comment deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 '''
 The post Method (POST Request)
