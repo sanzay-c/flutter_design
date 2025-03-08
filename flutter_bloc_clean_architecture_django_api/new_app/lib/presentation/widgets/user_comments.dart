@@ -35,7 +35,7 @@ class _UserCommentsState extends State<UserComments> {
           return Center(child: Text(state.errorMessage));
         } else if (state is BlogCommentLoaded) {
           final blogComments = state.blogComment;
-    
+
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -64,12 +64,12 @@ class _UserCommentsState extends State<UserComments> {
                             NeverScrollableScrollPhysics(), // Disable scrolling in ListView
                         itemBuilder: (context, index) {
                           final blogComment = blogComments[index];
-    
+
                           return Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 24),
                                 child: Card(
                                   elevation: 20,
                                   shape: RoundedRectangleBorder(
@@ -81,9 +81,30 @@ class _UserCommentsState extends State<UserComments> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          blogComment.text,
-                                          style: TextStyle(fontSize: 16),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                blogComment.text,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                context
+                                                    .read<BlogCommentBloc>()
+                                                    .add(DeleteBlogCommentEvent(
+                                                        blogPostId: widget.id,
+                                                        commentId: blogComment
+                                                            .id)); // Delete the comment
+                                              },
+                                              icon: Icon(Icons.delete,
+                                                  color: const Color.fromARGB(
+                                                      119, 0, 0, 0)),
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(height: 4),
                                         Row(
@@ -97,12 +118,29 @@ class _UserCommentsState extends State<UserComments> {
                                                     151, 0, 0, 0),
                                               ),
                                             ),
-                                            Text(
-                                              "Created at: ${DateFormat('yyyy-MM-dd HH:mm').format(blogComment.createdAt.toLocal())}",
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    151, 0, 0, 0),
-                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  "Created at:",
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        151, 0, 0, 0),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  DateFormat(
+                                                          'yyyy-MM-dd hh:mm a')
+                                                      .format(blogComment
+                                                          .createdAt
+                                                          .toLocal()),
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        151, 0, 0, 0),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -161,7 +199,7 @@ class _UserCommentsState extends State<UserComments> {
             ),
           );
         }
-    
+
         return Container();
       },
     );

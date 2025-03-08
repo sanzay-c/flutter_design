@@ -6,4 +6,6 @@ abstract class BlogRepository {
   Future<List<BlogCommentEntity>> fetchComment(int id);
   Future<BlogEntity> createBlog(BlogEntity blogPost);
   Future<BlogCommentEntity> addBlogComment(BlogCommentEntity postComment);
+  Future<void> deleteBlog(int id);
+  Future<void> deleteBlogComment(int blogPostId, int commentId);
 }

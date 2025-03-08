@@ -106,4 +106,32 @@ class BlogRemoteDataSources {
       throw Exception("Error posting comment: $e");
     }
   }
+
+  Future<void> deleteBlogPost(int id) async {
+    try {
+      var blogUrl = 'http://10.0.2.2:8000/api/blog_post/$id';
+
+      final response = await http.delete(Uri.parse(blogUrl));
+
+      if (response.statusCode != 204) {
+        throw Exception("Failed to delete blog: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error deleting blog: $e");
+    }
+  }
+
+  Future<void> deleteBlogPostComment(int blogPostId, int commentId) async {
+    try {
+     var commentUrl =  'http://10.0.2.2:8000/api/blog_post/$blogPostId/comments/$commentId';
+
+      final response = await http.delete(Uri.parse(commentUrl));
+
+      if (response.statusCode != 204) {
+        throw Exception("Failed to delete blog comment: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error deleting blog comment: $e");
+    }
+  }
 }

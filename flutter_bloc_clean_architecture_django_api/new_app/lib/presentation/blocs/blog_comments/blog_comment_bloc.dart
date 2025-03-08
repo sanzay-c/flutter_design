@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:new_app/domian/entities/blog_comment_entity.dart';
+import 'package:new_app/domian/usecases/delete_blog_comment.dart';
 import 'package:new_app/domian/usecases/get_comment.dart';
 
 part 'blog_comment_event.dart';
@@ -10,10 +11,15 @@ part 'blog_comment_state.dart';
 
 class BlogCommentBloc extends Bloc<BlogCommentEvent, BlogCommentState> {
   final GetComment blogComment;
+  final DeleteBlogComment deleteBlogComment;
 
-  BlogCommentBloc({required this.blogComment}) : super(BlogCommentInitial()) {
+  BlogCommentBloc({
+    required this.blogComment,
+    required this.deleteBlogComment,
+  }) : super(BlogCommentInitial()) {
     on<FetchBlogCommentEvent>(_onFetchBlogCommentEvent);
     on<AddBlogCommentEvent>(_onAddBlogCommentEvent);
+    on<DeleteBlogCommentEvent>(_onDeleteBlogCommentEvent);
   }
 
   FutureOr<void> _onFetchBlogCommentEvent(
@@ -32,11 +38,30 @@ class BlogCommentBloc extends Bloc<BlogCommentEvent, BlogCommentState> {
     }
   }
 
-  FutureOr<void> _onAddBlogCommentEvent(AddBlogCommentEvent event, Emitter<BlogCommentState> emit) async {
+  FutureOr<void> _onAddBlogCommentEvent(
+      AddBlogCommentEvent event, Emitter<BlogCommentState> emit) async {
     if (state is BlogCommentLoaded) {
       final currentState = state as BlogCommentLoaded;
-      final updatedComments = List<BlogCommentEntity>.from(currentState.blogComment)..add(event.comment);
+      final updatedComments =
+          List<BlogCommentEntity>.from(currentState.blogComment)
+            ..add(event.comment);
       emit(BlogCommentLoaded(blogComment: updatedComments));
+    }
+  }
+
+  FutureOr<void> _onDeleteBlogCommentEvent(
+      DeleteBlogCommentEvent event, Emitter<BlogCommentState> emit) async {
+    if (state is BlogCommentLoaded) {
+      try {
+        await deleteBlogComment(event.blogPostId, event.commentId);
+        final currentState = state as BlogCommentLoaded;
+        final updatedComments = currentState.blogComment
+            .where((comment) => comment.id != event.commentId)
+            .toList();
+        emit(BlogCommentLoaded(blogComment: updatedComments));
+      } catch (e) {
+        emit(BlogCommentError(errorMessage: "Failed to delete the comment: $e"));
+      }
     }
   }
 }

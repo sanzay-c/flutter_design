@@ -74,4 +74,14 @@ class BlogRepositoryImpl implements BlogRepository {
       throw Exception("Error in the repository: $e");
     }
   }
+  
+  @override
+  Future<void> deleteBlog(int id) async {
+    return await dataSources.deleteBlogPost(id);
+  }
+  
+  @override
+  Future<void> deleteBlogComment(int blogPostId, int commentId) async {
+    return await dataSources.deleteBlogPostComment(blogPostId, commentId);
+  }
 }

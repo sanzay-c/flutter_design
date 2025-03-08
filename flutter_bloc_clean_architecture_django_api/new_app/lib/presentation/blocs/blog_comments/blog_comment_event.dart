@@ -15,3 +15,11 @@ class AddBlogCommentEvent extends BlogCommentEvent {
 
   AddBlogCommentEvent(this.comment);
 }
+
+
+class DeleteBlogCommentEvent extends BlogCommentEvent {
+  final int blogPostId;
+  final int commentId;
+
+  DeleteBlogCommentEvent({required this.blogPostId, required this.commentId});
+}

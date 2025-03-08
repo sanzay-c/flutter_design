@@ -49,13 +49,14 @@ class _BlogListState extends State<BlogList> {
           } else if (state is BlogLoaded) {
             final blogs = state.blogs;
 
-            return RefreshIndicator( //The RefreshIndicator in Flutter is a widget that provides a "pull to refresh" 
+            return RefreshIndicator(
+              //The RefreshIndicator in Flutter is a widget that provides a "pull to refresh"
               onRefresh: _refresh,
               child: ListView.builder(
                 itemCount: blogs.length,
                 itemBuilder: (context, index) {
                   final blog = blogs[index];
-              
+
                   return Padding(
                     padding: EdgeInsets.all(6),
                     child: Card(
@@ -68,12 +69,27 @@ class _BlogListState extends State<BlogList> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              blog.title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    blog.title,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<BlogBloc>()
+                                        .add(DeleteBlogPostEvent(id: blog.id));
+                                  },
+                                  icon: Icon(Icons.delete),
+                                  color: const Color.fromARGB(125, 63, 63, 63),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 10),
                             Text(blog.content, style: TextStyle(fontSize: 14)),
@@ -81,8 +97,20 @@ class _BlogListState extends State<BlogList> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "Created at: ${DateFormat('yyyy-MM-dd HH:mm').format(blog.createdAt.toLocal())}",
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Created at:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('yyyy-MM-dd hh:mm a').format(blog.createdAt.toLocal()),
+                                    ),
+                                  ],
                                 ),
                                 ElevatedButton(
                                   onPressed:
@@ -103,7 +131,8 @@ class _BlogListState extends State<BlogList> {
                                     elevation:
                                         0, // No shadow to maintain transparency
                                     side: BorderSide(
-                                        color: const Color.fromARGB(255, 0, 0, 0),
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
                                         width: 2), // Border color and width
                                   ),
                                   child: Text(
