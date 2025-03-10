@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:new_app/data/datasources/blog_remote_data_sources.dart';
 import 'package:new_app/data/repositories/blog_repository_impl.dart';
+import 'package:new_app/domian/usecases/delete_blog_comment.dart';
+import 'package:new_app/domian/usecases/get_comment.dart';
 import 'package:new_app/domian/usecases/post_blog.dart';
 import 'package:new_app/presentation/blocs/blog/blog_bloc.dart';
 import 'package:new_app/presentation/blocs/blog_comments/blog_comment_bloc.dart';
 import 'package:new_app/presentation/blocs/blog_post/blog_post_bloc.dart';
 import 'package:new_app/presentation/screens/add_blog_screen.dart';
+import 'package:new_app/presentation/screens/edit_blog_screen.dart';
 import 'package:new_app/presentation/widgets/user_comments.dart';
 
 class BlogList extends StatefulWidget {
@@ -21,8 +24,19 @@ class _BlogListState extends State<BlogList> {
   void _showComments(int postId) {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => BlocProvider.value(
-        value: context.read<BlogCommentBloc>(),
+      builder: (context) => BlocProvider(
+        create: (context) => BlogCommentBloc(
+              blogComment: GetComment(
+                commentrepository: BlogRepositoryImpl(
+                  dataSources: BlogRemoteDataSources(),
+                ),
+              ),
+              deleteBlogComment: DeleteBlogComment(
+                blogRepositoryDeleteComment: BlogRepositoryImpl(
+                  dataSources: BlogRemoteDataSources(),
+                ),
+              ),
+            ),
         child: UserComments(
           id: postId,
         ),
@@ -62,14 +76,15 @@ class _BlogListState extends State<BlogList> {
                     child: Card(
                       elevation: 20,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: Colors.black)),
                       child: Padding(
                         padding: EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   child: Text(
@@ -80,14 +95,43 @@ class _BlogListState extends State<BlogList> {
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<BlogBloc>()
-                                        .add(DeleteBlogPostEvent(id: blog.id));
-                                  },
-                                  icon: Icon(Icons.delete),
-                                  color: const Color.fromARGB(125, 63, 63, 63),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<BlogBloc>().add(
+                                            DeleteBlogPostEvent(id: blog.id));
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color:
+                                            const Color.fromARGB(119, 0, 0, 0),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        final parentContext = context;
+
+                                        // Navigate to the edit screen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BlocProvider.value(
+                                              value: parentContext
+                                                  .read<BlogBloc>(),
+                                              child: EditBlogScreen(blog: blog),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color:
+                                            const Color.fromARGB(119, 0, 0, 0),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -103,12 +147,14 @@ class _BlogListState extends State<BlogList> {
                                     Text(
                                       "Created at:",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                    const SizedBox(height: 5),
                                     Text(
-                                      DateFormat('yyyy-MM-dd hh:mm a').format(blog.createdAt.toLocal()),
+                                      DateFormat('yyyy-MM-dd hh:mm:ss a')
+                                          .format(
+                                        blog.createdAt.toLocal(),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -143,7 +189,7 @@ class _BlogListState extends State<BlogList> {
                                         color: Colors.black // Text weight
                                         ),
                                   ),
-                                )
+                                ),
                               ],
                             )
                           ],

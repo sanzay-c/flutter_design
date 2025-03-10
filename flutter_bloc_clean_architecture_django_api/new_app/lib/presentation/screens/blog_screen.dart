@@ -41,11 +41,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_app/data/datasources/blog_remote_data_sources.dart';
 import 'package:new_app/data/repositories/blog_repository_impl.dart';
 import 'package:new_app/domian/usecases/delete_blog.dart';
-import 'package:new_app/domian/usecases/delete_blog_comment.dart';
 import 'package:new_app/domian/usecases/get_blog.dart';
-import 'package:new_app/domian/usecases/get_comment.dart';
+import 'package:new_app/domian/usecases/update_blog.dart';
 import 'package:new_app/presentation/blocs/blog/blog_bloc.dart';
-import 'package:new_app/presentation/blocs/blog_comments/blog_comment_bloc.dart';
 import 'package:new_app/presentation/widgets/blog_list.dart';
 
 class BlogScreen extends StatelessWidget {
@@ -72,22 +70,27 @@ class BlogScreen extends StatelessWidget {
                   dataSources: BlogRemoteDataSources(),
                 ),
               ),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => BlogCommentBloc(
-              blogComment: GetComment(
-                commentrepository: BlogRepositoryImpl(
-                  dataSources: BlogRemoteDataSources(),
-                ),
-              ),
-              deleteBlogComment: DeleteBlogComment(
-                blogRepositoryDeleteComment: BlogRepositoryImpl(
+              updateBlog: UpdateBlog(
+                updateblogRepository: BlogRepositoryImpl(
                   dataSources: BlogRemoteDataSources(),
                 ),
               ),
             ),
           ),
+          // BlocProvider(
+          //   create: (context) => BlogCommentBloc(
+          //     blogComment: GetComment(
+          //       commentrepository: BlogRepositoryImpl(
+          //         dataSources: BlogRemoteDataSources(),
+          //       ),
+          //     ),
+          //     deleteBlogComment: DeleteBlogComment(
+          //       blogRepositoryDeleteComment: BlogRepositoryImpl(
+          //         dataSources: BlogRemoteDataSources(),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
         child: BlogList(),
       ),

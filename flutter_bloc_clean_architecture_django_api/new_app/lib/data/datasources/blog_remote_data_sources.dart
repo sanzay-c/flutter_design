@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:new_app/data/models/blog_comment_model.dart';
 import 'package:new_app/data/models/blog_model.dart';
@@ -123,15 +124,42 @@ class BlogRemoteDataSources {
 
   Future<void> deleteBlogPostComment(int blogPostId, int commentId) async {
     try {
-     var commentUrl =  'http://10.0.2.2:8000/api/blog_post/$blogPostId/comments/$commentId';
+      var commentUrl =
+          'http://10.0.2.2:8000/api/blog_post/$blogPostId/comments/$commentId';
 
       final response = await http.delete(Uri.parse(commentUrl));
 
       if (response.statusCode != 204) {
-        throw Exception("Failed to delete blog comment: ${response.statusCode}");
+        throw Exception(
+            "Failed to delete blog comment: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Error deleting blog comment: $e");
+    }
+  }
+
+  Future<void> updateBlog(BlogEntity blog) async {
+    try {
+      var blogUrl = 'http://10.0.2.2:8000/api/blog_post/${blog.id}/update';
+
+      final response = await http.put(
+        Uri.parse(blogUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'title': blog.title,
+          'content': blog.content,
+          'created_at': blog.createdAt.toIso8601String(),
+        }),
+      );
+
+      log("Response status code: ${response.statusCode}"); // Debugging
+      log("Response body: ${response.body}"); // Debugging
+
+      if (response.statusCode != 200) {
+        throw Exception("Failed to update blog: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error updating blog: $e");
     }
   }
 }

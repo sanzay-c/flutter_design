@@ -8,4 +8,5 @@ abstract class BlogRepository {
   Future<BlogCommentEntity> addBlogComment(BlogCommentEntity postComment);
   Future<void> deleteBlog(int id);
   Future<void> deleteBlogComment(int blogPostId, int commentId);
+  Future<void> updateBlog(BlogEntity blog);
 }

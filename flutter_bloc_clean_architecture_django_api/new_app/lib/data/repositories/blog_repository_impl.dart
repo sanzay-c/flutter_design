@@ -84,4 +84,9 @@ class BlogRepositoryImpl implements BlogRepository {
   Future<void> deleteBlogComment(int blogPostId, int commentId) async {
     return await dataSources.deleteBlogPostComment(blogPostId, commentId);
   }
+  
+  @override
+  Future<void> updateBlog(BlogEntity blog) async {
+    return await dataSources.updateBlog(blog);
+  }
 }

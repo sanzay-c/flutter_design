@@ -50,9 +50,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
     // Dispatch the PostBlogEvent to the Bloc
     context.read<BlogPostBloc>().add(PostEvent(blogPost: newBlogPost));
-
-
- 
   }
 
   @override

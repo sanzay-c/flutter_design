@@ -10,3 +10,10 @@ class DeleteBlogPostEvent extends BlogEvent {
 
   DeleteBlogPostEvent({required this.id});
 }
+
+// to update the blog
+class UpdateBlogEvent extends BlogEvent {
+  final BlogEntity blog;
+
+  UpdateBlogEvent({required this.blog});
+}
