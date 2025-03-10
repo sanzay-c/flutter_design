@@ -35,6 +35,28 @@ class BlogPostApiView(APIView):
         return Response({"message": "Blog post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
+class BlogPostUpdateApiView(APIView):
+    # PUT request to fully update a blog post
+    def put(self, request, blog_post_id):
+        blog_post = get_object_or_404(BlogPost, id=blog_post_id)
+        serializer = BlogPostSerializer(blog_post, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # PATCH request to partially update a blog post
+    def patch(self, request, blog_post_id):
+        blog_post = get_object_or_404(BlogPost, id=blog_post_id)
+        serializer = BlogPostSerializer(blog_post, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 class CommentAPIView(APIView):
     # GET request to fetch all the data 
     def get(self, request, blog_post_id):
