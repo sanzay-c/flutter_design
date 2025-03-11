@@ -49,6 +49,55 @@ class _BlogListState extends State<BlogList> {
     context.read<BlogBloc>().add(FetchBlogEvent());
   }
 
+  void _showDeleteDialog(BuildContext context, int blogPostId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        // here context is changed into dialogContext because is used everywhere so it was no executing properly
+        return AlertDialog(
+          title: Text("Are you sure you want to delete this ?."),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(119, 0, 0, 0),
+              ),
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context
+                    .read<BlogBloc>()
+                    .add(DeleteBlogPostEvent(id: blogPostId));
+                Navigator.of(dialogContext).pop(); // Close the dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Blog Deleted Successfully"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(119, 0, 0, 0),
+
+              ),
+              child: Text(
+                "Yes",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,8 +148,9 @@ class _BlogListState extends State<BlogList> {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        context.read<BlogBloc>().add(
-                                            DeleteBlogPostEvent(id: blog.id));
+                                        // context.read<BlogBloc>().add(
+                                        //     DeleteBlogPostEvent(id: blog.id));
+                                        _showDeleteDialog(context, blog.id);
                                       },
                                       icon: Icon(
                                         Icons.delete,
