@@ -1,0 +1,2 @@
+D:/flutter_projects/flutter_design/flutter_qrCode_scanner/qrcode_scanner/android/app/.cxx/Debug/2v2ts551/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/flutter_projects/flutter_design/flutter_qrCode_scanner/qrcode_scanner/android/app/.cxx/Debug/2v2ts551/arm64-v8a/CMakeFiles/rebuild_cache.dir

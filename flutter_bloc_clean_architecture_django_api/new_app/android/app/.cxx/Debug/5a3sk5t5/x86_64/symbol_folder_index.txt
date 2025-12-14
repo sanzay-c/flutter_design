@@ -1,0 +1,1 @@
+D:\flutter_projects\flutter_design\flutter_bloc_clean_architecture_django_api\new_app\build\app\intermediates\cxx\Debug\5a3sk5t5\obj\x86_64
