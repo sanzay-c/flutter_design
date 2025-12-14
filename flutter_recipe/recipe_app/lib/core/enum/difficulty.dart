@@ -1,0 +1,21 @@
+// lib/domain/enums/difficulty.dart
+enum Difficulty { EASY, MEDIUM, HARD }
+
+class EnumValues<T> {
+  Map<String, T> map;
+  late Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    reverseMap = map.map((k, v) => MapEntry(v, k));
+    return reverseMap;
+  }
+}
+
+// ✅ Global instance for easy access
+final difficultyValues = EnumValues({
+  "Easy": Difficulty.EASY,
+  "Medium": Difficulty.MEDIUM,
+  "Hard": Difficulty.HARD,
+});

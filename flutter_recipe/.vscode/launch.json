@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dev",
+      "request": "launch",
+      "type": "dart",
+      "program": "D://flutter_recipe//recipe_app//lib//main_dev.dart",
+      "args": ["--flavor", "dev"]
+    },
+    {
+      "name": "Staging",
+      "request": "launch",
+      "type": "dart",
+      "program": "D://flutter_recipe//recipe_app//lib//main_staging.dart",
+      "args": ["--flavor", "staging"]
+    },
+    {
+      "name": "Production",
+      "request": "launch",
+      "type": "dart",
+      "program": "D://flutter_recipe//recipe_app//lib//main_prod.dart",
+      "args": ["--flavor", "prod"]
+    }
+  ]
+}
