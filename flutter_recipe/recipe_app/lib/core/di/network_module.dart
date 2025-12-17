@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:recipe_app/core/config/env_config.dart';
+import 'package:recipe_app/core/database/app_database.dart';
+import 'package:recipe_app/core/database/daos/recipe_dao.dart';
 
 @module 
 abstract class NetworkModule {
@@ -30,4 +32,12 @@ abstract class NetworkModule {
             },
           ),
         );
+
+  // Database instance (पूरै app मा एउटा मात्र)
+  @lazySingleton
+  AppDatabase get database => AppDatabase();
+
+  // Recipe DAO (database operations)
+  @lazySingleton
+  RecipeDao get recipeDao => RecipeDao(database);
 }

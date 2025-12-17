@@ -13,7 +13,7 @@ class RecipeDatasource {
   Future<List<Recipe>> fetchRecipes() async {
     try {
       final response = await _dio.get('/recipes');
-      
+
       if (response.statusCode == 200) {
         final recipeJsonModel = RecipeModel.fromJson(response.data);
         return recipeJsonModel.recipes;
@@ -28,7 +28,7 @@ class RecipeDatasource {
   Future<RecipeDetailModel> fetchRecipeDetail(int id) async {
     try {
       final response = await _dio.get('/recipes/$id');
-      
+
       if (response.statusCode == 200) {
         return RecipeDetailModel.fromJson(response.data);
       } else {
@@ -38,38 +38,36 @@ class RecipeDatasource {
       throw _handleError(e);
     }
   }
-  
- // lib/data/datasources/recipe_datasource.dart
 
-Future<Recipe> addRecipe(AddRecipeRequestModel recipeRequest) async {
-  try {
-    final response = await _dio.post(
-      '/recipes/add',
-      data: recipeRequest.toJson(),
-    );
+  Future<Recipe> addRecipe(AddRecipeRequestModel recipeRequest) async {
+    try {
+      final response = await _dio.post(
+        '/recipes/add',
+        data: recipeRequest.toJson(),
+      );
 
-    // ✅ Print full response to debug
-    print('✅ Status Code: ${response.statusCode}');
-    print('✅ Response Data: ${response.data}');
-    print('✅ Response Type: ${response.data.runtimeType}');
+      // ✅ Print full response to debug
+      print('✅ Status Code: ${response.statusCode}');
+      print('✅ Response Data: ${response.data}');
+      print('✅ Response Type: ${response.data.runtimeType}');
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // Try to parse
-      try {
-        return Recipe.fromJson(response.data);
-      } catch (parseError) {
-        print('❌ Parse Error: $parseError');
-        print('❌ Response structure: ${response.data}');
-        rethrow;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Try to parse
+        try {
+          return Recipe.fromJson(response.data);
+        } catch (parseError) {
+          print('❌ Parse Error: $parseError');
+          print('❌ Response structure: ${response.data}');
+          rethrow;
+        }
+      } else {
+        throw Exception("Failed with status code: ${response.statusCode}");
       }
-    } else {
-      throw Exception("Failed with status code: ${response.statusCode}");
+    } catch (e) {
+      print('❌ Full Error: $e');
+      throw _handleError(e);
     }
-  } catch (e) {
-    print('❌ Full Error: $e');
-    throw _handleError(e);
   }
-}
 
   Exception _handleError(dynamic error) {
     if (error is DioException) {
