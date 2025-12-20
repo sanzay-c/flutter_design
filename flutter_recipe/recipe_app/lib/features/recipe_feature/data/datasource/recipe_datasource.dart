@@ -66,7 +66,7 @@ class RecipeDatasource {
     } catch (e) {
       print('❌ Full Error: $e');
       throw _handleError(e);
-    }
+    } 
   }
 
   Exception _handleError(dynamic error) {

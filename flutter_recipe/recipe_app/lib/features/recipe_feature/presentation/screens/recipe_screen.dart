@@ -406,7 +406,6 @@ class _RecipeDrawerState extends State<RecipeDrawer> {
 
                       const Divider(),
 
-                      /// 👇 THIS IS THE FIX
                       Expanded(
                         child: ListView.builder(
                           itemCount: localRecipes.length,
