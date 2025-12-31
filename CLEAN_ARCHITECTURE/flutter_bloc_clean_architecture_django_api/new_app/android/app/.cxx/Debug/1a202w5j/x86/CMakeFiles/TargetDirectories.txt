@@ -1,0 +1,2 @@
+D:/assignments-work/CLEAN_ARCHITECTURE/flutter_bloc_clean_architecture_django_api/new_app/android/app/.cxx/Debug/1a202w5j/x86/CMakeFiles/edit_cache.dir
+D:/assignments-work/CLEAN_ARCHITECTURE/flutter_bloc_clean_architecture_django_api/new_app/android/app/.cxx/Debug/1a202w5j/x86/CMakeFiles/rebuild_cache.dir

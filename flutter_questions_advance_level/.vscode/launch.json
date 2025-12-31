@@ -5,21 +5,21 @@
       "name": "Dev",
       "request": "launch",
       "type": "dart",
-      "program": "D://flutter_practise_delete_this//posts_app//lib//main_dev.dart", // path of the file
+      "program": "D://flutter_projects//flutter_design//flutter_questions_advance_level//posts_app//lib//main_dev.dart", // path of the file
       "args": ["--flavor", "dev"]
     },
     {
       "name": "Staging",
       "request": "launch",
       "type": "dart",
-      "program": "D://flutter_practise_delete_this//posts_app//lib//main_staging.dart", // path of the file
+      "program": "D://flutter_projects//flutter_design//flutter_questions_advance_level//posts_app//lib//main_staging.dart", // path of the file
       "args": ["--flavor", "staging"]
     },
     {
       "name": "Production",
       "request": "launch",
       "type": "dart",
-      "program": "D://flutter_practise_delete_this//posts_app//lib//main_prod.dart", // path of the file
+      "program": "D://flutter_projects//flutter_design//flutter_questions_advance_level//posts_app//lib//main_prod.dart", // path of the file
       "args": ["--flavor", "prod"]
     }
   ]
