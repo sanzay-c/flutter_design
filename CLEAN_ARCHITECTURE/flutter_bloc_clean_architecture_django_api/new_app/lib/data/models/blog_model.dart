@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../domian/entities/blog_entity.dart';
+
 class BlogModel {
     int id;
     String title;
@@ -43,4 +45,8 @@ class BlogModel {
         "content": content,
         "created_at": createdAt.toIso8601String(),
     };
+
+    BlogEntity toEntity(){
+      return BlogEntity(id: id, title: title, content: content, createdAt: createdAt);
+    }
 }

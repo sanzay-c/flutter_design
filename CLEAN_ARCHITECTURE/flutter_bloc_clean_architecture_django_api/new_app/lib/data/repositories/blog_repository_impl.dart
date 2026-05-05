@@ -5,6 +5,11 @@ import 'package:new_app/domian/entities/blog_comment_entity.dart';
 import 'package:new_app/domian/entities/blog_entity.dart';
 import 'package:new_app/domian/repositories/blog_repository.dart';
 
+import '../../../../../../flutter_questions_advance_level/posts_app/lib/features/upload-image/prsentation/bloc/upload_bloc.dart';
+import '../../domian/entities/blog_entity.dart';
+import '../../domian/repositories/blog_repository.dart';
+import '../datasources/blog_remote_data_sources.dart';
+
 class BlogRepositoryImpl implements BlogRepository {
   final BlogRemoteDataSources dataSources;
 
@@ -12,7 +17,8 @@ class BlogRepositoryImpl implements BlogRepository {
 
   @override
   Future<List<BlogEntity>> fetchBlog() async {
-    return await dataSources.fetchBlog();
+    final result = await dataSources.fetchBlog();
+    return result.map((e) => e.toEntity()).toList();
   }
 
   @override

@@ -6,8 +6,10 @@ import 'package:new_app/domian/entities/blog_comment_entity.dart';
 import 'package:new_app/domian/entities/blog_entity.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/blog_model.dart';
+
 class BlogRemoteDataSources {
-  Future<List<BlogEntity>> fetchBlog() async {
+  Future<List<BlogModel>> fetchBlog() async {
     try {
       var blogUrl = 'http://10.0.2.2:8000/api/blog_post';
 
@@ -18,14 +20,7 @@ class BlogRemoteDataSources {
         List<BlogModel> blogData =
             jsonData.map((e) => BlogModel.fromJson(e)).toList();
 
-        return blogData.map((blog) {
-          return BlogEntity(
-            id: blog.id,
-            title: blog.title,
-            content: blog.content,
-            createdAt: blog.createdAt,
-          );
-        }).toList();
+        return blogData;
       } else {
         throw Exception("There is an Error in the data source");
       }
